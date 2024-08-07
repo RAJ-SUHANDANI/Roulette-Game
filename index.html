@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Game</title>
+    <style>
+        #wheel-container {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            margin: 50px auto;
+        }
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                red 0deg 10deg,
+                black 10deg 20deg,
+                red 20deg 30deg,
+                black 30deg 40deg,
+                red 40deg 50deg,
+                black 50deg 60deg,
+                red 60deg 70deg,
+                black 70deg 80deg,
+                red 80deg 90deg,
+                black 90deg 100deg,
+                red 100deg 110deg,
+                black 110deg 120deg,
+                red 120deg 130deg,
+                black 130deg 140deg,
+                red 140deg 150deg,
+                black 150deg 160deg,
+                red 160deg 170deg,
+                black 170deg 180deg,
+                red 180deg 190deg,
+                black 190deg 200deg,
+                red 200deg 210deg,
+                black 210deg 220deg,
+                red 220deg 230deg,
+                black 230deg 240deg,
+                red 240deg 250deg,
+                black 250deg 260deg,
+                red 260deg 270deg,
+                black 270deg 280deg,
+                red 280deg 290deg,
+                black 290deg 300deg,
+                red 300deg 310deg,
+                black 310deg 320deg,
+                red 320deg 330deg,
+                black 330deg 340deg,
+                red 340deg 350deg,
+                green 350deg 360deg
+            );
+            position: relative;
+            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .number {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            color: white;
+            transform-origin: 150px 150px;
+        }
+        #ball {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 140px;
+            left: 140px;
+        }
+        #spin {
+            display: block;
+            margin: 20px auto;
+        }
+        #result {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="wheel-container">
+        <div id="wheel">
+            <div id="ball"></div>
+        </div>
+    </div>
+    <button id="spin">Spin</button>
+    <p id="result"></p>
+
+    <script>
+        const wheel = document.getElementById('wheel');
+        const spinButton = document.getElementById('spin');
+        const result = document.getElementById('result');
+
+        const numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+
+        // Add numbers to the wheel
+        numbers.forEach((number, index) => {
+            const numberElement = document.createElement('div');
+            numberElement.className = 'number';
+            numberElement.textContent = number;
+            const angle = (index * 360 / 37) + (360 / 74); // +5 degrees to center in the segment
+            const translateX = 135 * Math.cos(angle * Math.PI / 180);
+            const translateY = 135 * Math.sin(angle * Math.PI / 180);
+            numberElement.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${angle + 90}deg)`;
+            wheel.appendChild(numberElement);
+        });
+
+        spinButton.addEventListener('click', spin);
+
+        function spin() {
+    const minRotations = 4; // Minimum number of full rotations
+    const maxRotations = 5; // Maximum number of full rotations
+    const extraRotation = Math.random(); // Random additional rotation between 0 and 1
+
+    // Calculate total rotation: 
+    // (minRotations + random extra rotations up to maxRotations) * 360 degrees
+    const totalRotations = (minRotations + (maxRotations - minRotations) * Math.random() + extraRotation);
+    const rotation = Math.floor(totalRotations * 360);
+
+    wheel.style.transform = `rotate(${rotation}deg)`;
+    
+    setTimeout(() => {
+        const actualRotation = rotation % 360;
+        const number = getNumber(actualRotation);
+        result.textContent = `The ball landed on ${number}!`;
+    }, 5000);
+}
+
+        function getNumber(rotation) {
+            const index = Math.floor(rotation / (360 / 37));
+            return numbers[index];
+        }
+    </script>
+</body>
+</html>
